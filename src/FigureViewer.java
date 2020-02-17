@@ -26,6 +26,9 @@ public class FigureViewer extends JFrame
    private JButton exitButton = null;
    private JButton drawAllButton = null;
 
+   /**Static boolean to signal mouse listener to do nothing when true*/
+   protected static boolean screenClear = false;
+
 
 
    /**
@@ -80,20 +83,22 @@ public class FigureViewer extends JFrame
     */
    public void actionPerformed(ActionEvent e)
    {
-       Object source = e.getSource();
-       if (source == exitButton)
-       {
-	     System.exit(0);
-       }
-       else if (source == clearButton)
-       {
-	     drawCanvas.clear();
-       }
-       else if (source == drawAllButton)
-       {
-          /*When call, the program will redraw all shapes*/
-          AbstractShape.drawAll(this.getViewerGraphics());
-       }
+      Object source = e.getSource();
+      if (source == exitButton)
+      {
+         System.exit(0);
+      }
+      else if (source == clearButton)
+      {
+         screenClear = true;
+         drawCanvas.clear();
+      }
+      else if (source == drawAllButton)
+      {
+         /*When call, the program will redraw all shapes*/
+         screenClear = false;
+         AbstractShape.drawAll(this.getViewerGraphics());
+      }
    }
 
    /**
@@ -104,20 +109,13 @@ public class FigureViewer extends JFrame
    @Override
    public void mouseClicked(MouseEvent e)
    {
-      System.out.println("Pressed at: " + e.getX() + ", " + e.getY());
-      AbstractShape result = AbstractShape.inShape(e.getX(),e.getY());
-      if(result != null)
+      if(!screenClear)
       {
-         try
-         {
-            drawCanvas.clear();
-            Thread.sleep(1000);
-            result.draw(getViewerGraphics(),result.drawColor);
+         System.out.println("Pressed at: " + e.getX() + ", " + e.getY());
+         AbstractShape result = AbstractShape.inShape(e.getX(), e.getY());
+         if (result != null) {
+            result.draw(getViewerGraphics(), result.drawColor);
          }
-         catch (InterruptedException ie)
-         {
-         }
-
       }
    }
 
@@ -141,7 +139,7 @@ public class FigureViewer extends JFrame
     */
    public void clear()
    {
-       drawCanvas.clear();
+      drawCanvas.clear();
    }
 
    /**
