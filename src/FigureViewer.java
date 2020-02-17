@@ -70,7 +70,6 @@ public class FigureViewer extends JFrame
       getContentPane().add(mainPanel, BorderLayout.CENTER);
 
       /*Add mouse event listener for click detection*/
-      mainPanel.addMouseListener(this);
       drawCanvas.addMouseListener(this);
    }
 
@@ -105,18 +104,20 @@ public class FigureViewer extends JFrame
    @Override
    public void mouseClicked(MouseEvent e)
    {
-      ArrayList<AbstractShape> allShapes = AbstractShape.allFigures;
       System.out.println("Pressed at: " + e.getX() + ", " + e.getY());
-      /*Parse through every shapes to see if the coordinate match any boundary*/
-      for(int i = 0; i < allShapes.size(); i ++)
+      AbstractShape result = AbstractShape.inShape(e.getX(),e.getY());
+      if(result != null)
       {
-         boolean result = allShapes.get(i).inShape(e.getX(),e.getY());
-         /*If found, fill that shape then break loop immediately*/
-         if(result)
+         try
          {
-            allShapes.get(i).draw(getViewerGraphics(),allShapes.get(i).drawColor);
-            break;
+            drawCanvas.clear();
+            Thread.sleep(1000);
+            result.draw(getViewerGraphics(),result.drawColor);
          }
+         catch (InterruptedException ie)
+         {
+         }
+
       }
    }
 

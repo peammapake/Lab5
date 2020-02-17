@@ -1,5 +1,6 @@
 import javafx.geometry.BoundingBox;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.awt.*;
 /**
@@ -162,11 +163,19 @@ public abstract class AbstractShape
 	 * @param y y coordinate of the mouse click
 	 * @return return true if within shape and false otherwise
 	 */
-	public boolean inShape(int x, int y)
+	public static AbstractShape inShape(int x, int y)
 	{
-		if(shapeArea.contains(x,y))
-			return true;
-		return false;
+		/*Parse through every shapes to see if the coordinate match any boundary*/
+		for(int i = 0; i < allFigures.size(); i ++)
+		{
+			AbstractShape currentFigure = allFigures.get(i);
+			/*If found, fill that shape then break loop immediately*/
+			if(currentFigure.shapeArea.contains(x,y))
+			{
+				return currentFigure;
+			}
+		}
+		return null;
 	}
 
 	/**
